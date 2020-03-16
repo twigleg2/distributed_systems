@@ -4,6 +4,17 @@ ruleset io.picolabs.use_twilio_v2 {
         use module io.picolabs.twilio_v2 alias twilio
             with account_sid = keys:twilio{"account_sid"}
                  auth_token = keys:twilio{"auth_token"}
+
+        shares
+            getLogs
+    }
+
+    global {
+        getLogs = function(phone_number, page) {
+            map = twilio:getLogs()
+            messages = map{"messages"}
+            phone_number.isnull() => messages | messages.filter(function(x){x{"to"}.substr(1) == phone_number.substr(1)})
+        }
     }
 
     rule test_send_sms {
@@ -14,4 +25,5 @@ ruleset io.picolabs.use_twilio_v2 {
             event:attr("message")
         )
     }
+
 }

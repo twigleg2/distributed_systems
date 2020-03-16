@@ -3,7 +3,8 @@ ruleset io.picolabs.twilio_v2 {
         configure using account_sid = ""
                         auth_token = ""
         provides
-            send_sms
+            send_sms,
+            getLogs
     }
 
     global {
@@ -14,6 +15,14 @@ ruleset io.picolabs.twilio_v2 {
                 "To":to,
                 "Body":message
             })
+        }
+
+        getLogs = function() {
+            get_url = <<https://#{account_sid}:#{auth_token}@api.twilio.com/2010-04-01/Accounts/#{account_sid}/Messages.json>>
+            map = http:get(get_url).klog()
+            content = map{"content"}
+            decoded = content.decode()
+            decoded //returns the last expression
         }
     }
 }
