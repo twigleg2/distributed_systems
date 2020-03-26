@@ -1,8 +1,8 @@
 ruleset wovyn_base {
 
     meta {
-        use module io.picolabs.lesson_keys
-        use module io.picolabs.twilio_v2 alias twilio
+        use module twilio_keys
+        use module twilio_v2
             with account_sid = keys:twilio{"account_sid"}
                  auth_token = keys:twilio{"auth_token"}
     }
@@ -59,7 +59,7 @@ ruleset wovyn_base {
             message = "Temperature sensor threshold violation!\nCurrent temperature: " + temperatureF
 
         }
-        twilio:send_sms(
+        twilio_v2:send_sms(
             ent:phone_number,
             ent:phone_number_from,
             message
