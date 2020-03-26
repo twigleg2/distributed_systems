@@ -25,5 +25,4 @@ ruleset io.picolabs.use_twilio_v2 {
             event:attr("message")
         )
     }
-
 }

@@ -1,8 +1,0 @@
-# send a text:
-http://localhost:8080/sky/event/Y9JzGFuEKa1HRKx4pwpV15/1/test/new_message?to=+18017934946&from=+12256865973&message=testtext
-
-# retrieve messages
-http://localhost:8080/sky/cloud/Y9JzGFuEKa1HRKx4pwpV15/io.picolabs.use_twilio_v2/getLogs
-
-# curl 
--X POST https://api.twilio.com/2010-04-01/Accounts/AC8db5ba84c8176f73219f44f7df3b3026/Messages.json --data-urlencode "Body=Hi there$EXCLAMATION_MARK" --data-urlencode "From=+12256865973" --data-urlencode "To=+18017934946" -u AC8db5ba84c8176f73219f44f7df3b3026:7393005b1100b234b769aad3202f4ea5

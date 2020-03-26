@@ -1,5 +1,4 @@
 ruleset wovyn_base {
-
     meta {
         use module twilio_keys
         use module twilio_v2
@@ -39,11 +38,9 @@ ruleset wovyn_base {
             temperature = eventattrs{"temperature"}.klog("temperature:")
             temperatureF = temperature[0]{"temperatureF"}.klog("temperatureF:")
             above_threshold = temperatureF > ent:temperature_threshold
+            message = above_threshold => "Temperature Violation!"| "No Temperature Violation."
         }
-        // choose above_threshold{
-        //     true => send_directive("Temperature Violation!")
-        //     false => send_directive("No Temperature Violation.")
-        // }
+        send_directive(message)
         fired {
             raise wovyn event "threshold_violation" 
                 attributes event:attrs if above_threshold

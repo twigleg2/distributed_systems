@@ -1,3 +1,0 @@
-ruleset wovyn_base {
-    
-}
