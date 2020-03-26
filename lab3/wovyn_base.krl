@@ -7,7 +7,7 @@ ruleset wovyn_base {
     }
 
     rule initialization {
-        select when wrangler ruleset_added where event:attrs("rids") >< meta:rid
+        select when wrangler ruleset_added where event:attr("rids") >< meta:rid
         fired{
             ent:temperature_threshold := 80
             ent:phone_number_to := "+18017934946"
@@ -37,7 +37,7 @@ ruleset wovyn_base {
             eventattrs = event:attrs.klog("eventattrs:")
             temperature = eventattrs{"temperature"}.klog("temperature:")
             temperatureF = temperature[0]{"temperatureF"}.klog("temperatureF:")
-            above_threshold = temperatureF > ent:temperature_threshold
+            above_threshold = temperatureF.klog("temperatureF: ") > ent:temperature_threshold.klog("ent: ")
             message = above_threshold => "Temperature Violation!"| "No Temperature Violation."
         }
         send_directive(message)
