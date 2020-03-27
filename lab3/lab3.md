@@ -1,4 +1,4 @@
-## Gavan Finch
+## Gaven Finch
 # Lab 3
 
 **URI**\
@@ -8,7 +8,7 @@ mine: http://192.168.1.161:8080/sky/event/RDuf2XxiLgABQ687nKfZnz/wov/wovyn/heart
 **test**\
 curl http://192.168.1.161:8080/sky/event/RDuf2XxiLgABQ687nKfZnz/wov/wovyn/heartbeat --data "_domain=foo&_type=bar"
 
-**Questions**\
+**Questions**
 1. git pre-commit
 2. event expression.  My rule isn't added to the scheduler if the event expression evaluates to false, so it's more efficient.
 3. Before the find_high_temps rule was added there was only 1 rule, so 1 rule was executed.  no directies were returned (an empty array)
