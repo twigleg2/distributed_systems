@@ -20,10 +20,10 @@ ruleset wovyn_base {
         pre{
             eventattrs = event:attrs
             genericThing = eventattrs{"genericThing"}
-            decoded = genericThing.decode().klog("decoded:") //TODO: I might not need to decode when I use the real event
+            decoded = genericThing.decode().klog("decoded:") //I might not need to decode when I use the real event
             data = decoded{"data"}
             temperature = data{"temperature"}
-            timestamp = "a timestamp goes here"
+            timestamp = "a timestamp goes here" //TODO
         }
         fired{
         raise wovyn event "new_temperature_reading"
