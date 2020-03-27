@@ -9,21 +9,17 @@ ruleset temperature_store {
         //these functions should return an array of temperatures, where each temperature is a timestamp and a temperature value
         temperatures = function() {
             //return the contents of the temperature entity variable
-            ent:temperatures
+            ent:temperatures.klog("temperatures")
         }
 
         threshold_violations = function() {
             //return the contents of the threshold_violation entity variable
-            ent:threshold_violations
+            ent:threshold_violations.klog("threshold_violatios: ")
         }
 
         inrange_temperatures = function() {
             //return all the temperatures from ent:temperatures that are NOT in ent:threshold_violations
-            ent:temperatures.filter(function(x){
-                not ent:threshold_violations.any(function(y){
-                    x == y
-                })
-            })
+            ent:temperatures.difference(ent:threshold_violations)
         }
     }
 
