@@ -3,7 +3,7 @@
 
 **My ruleset URLs**\
 [twilio](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab3/twilio_v2.krl?token=AINOKEB4WWAXJY6HZVENCLK6Q6FO2)\
-[woyn_base](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab3/wovyn_base.krl?token=AINOKEHFJKKX2ZZBQZUOFL26Q6FQ4)\
+[woyn_base](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab3/wovyn_base.krl?token=AINOKEHFJKKX2ZZBQZUOFL26Q6FQ4)
 
 **URI**\
 gen:  http://<ip_address>:<port>/sky/event/<channel_id>/<event_id>/<domain>/<name>
