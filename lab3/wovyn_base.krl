@@ -1,7 +1,7 @@
 ruleset wovyn_base {
     meta {
         use module twilio_keys
-        use module twilio_v2
+        use module twilio_v2 alias twilio
             with account_sid = keys:twilio{"account_sid"}
                  auth_token = keys:twilio{"auth_token"}
     }
@@ -18,11 +18,11 @@ ruleset wovyn_base {
     rule process_hearbeat {
         select when wovyn heartbeat where event:attr("genericThing")
         pre{
-            eventattrs = event:attrs.klog("eventattrs:")
-            genericThing = eventattrs{"genericThing"}.klog("genericThing:")
+            eventattrs = event:attrs
+            genericThing = eventattrs{"genericThing"}
             decoded = genericThing.decode().klog("decoded:") //TODO: I might not need to decode when I use the real event
-            data = decoded{"data"}.klog("data:")
-            temperature = data{"temperature"}.klog("temperature:")
+            data = decoded{"data"}
+            temperature = data{"temperature"}
             timestamp = "a timestamp goes here"
         }
         fired{
@@ -34,9 +34,9 @@ ruleset wovyn_base {
     rule find_high_temps {
         select when wovyn new_temperature_reading
         pre {
-            eventattrs = event:attrs.klog("eventattrs:")
-            temperature = eventattrs{"temperature"}.klog("temperature:")
-            temperatureF = temperature[0]{"temperatureF"}.klog("temperatureF:")
+            eventattrs = event:attrs
+            temperature = eventattrs{"temperature"}
+            temperatureF = temperature[0]{"temperatureF"}
             above_threshold = temperatureF.klog("temperatureF: ") > ent:temperature_threshold.klog("ent: ")
             message = above_threshold => "Temperature Violation!"| "No Temperature Violation."
         }
@@ -56,8 +56,8 @@ ruleset wovyn_base {
             message = "Temperature sensor threshold violation!\nCurrent temperature: " + temperatureF
 
         }
-        twilio_v2:send_sms(
-            ent:phone_number,
+        twilio:send_sms(
+            ent:phone_number_to,
             ent:phone_number_from,
             message
         )
