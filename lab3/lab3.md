@@ -1,6 +1,10 @@
 ## Gaven Finch
 # Lab 3
 
+**My ruleset URLs**\
+[twilio](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab3/twilio_v2.krl?token=AINOKEB4WWAXJY6HZVENCLK6Q6FO2)\
+[woyn_base](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab3/wovyn_base.krl?token=AINOKEHFJKKX2ZZBQZUOFL26Q6FQ4)\
+
 **URI**\
 gen:  http://<ip_address>:<port>/sky/event/<channel_id>/<event_id>/<domain>/<name>
 mine: http://192.168.1.161:8080/sky/event/RDuf2XxiLgABQ687nKfZnz/wov/wovyn/heartbeat
