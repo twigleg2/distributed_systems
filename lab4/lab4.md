@@ -2,7 +2,7 @@
 # Lab 4
 
 **My ruleset URLs**\
-[temperature_store]()
+[temperature_store](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab4/temperature_store.krl?token=AINOKEB7OX7732PSR5NXSRS6Q7FX4)
 
 **questions**
 1. collect_temperatures responds to events, while temperatures responds to queries.  Each has unique resposabilities that are triggered and executed as defined in the ruleset.
