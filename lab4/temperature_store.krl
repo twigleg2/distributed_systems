@@ -51,6 +51,10 @@ ruleset temperature_store {
 
     rule clear_temperatures {
         select when sensor reading_reset
+        pre {
+            message = "All temperatures have been cleared."
+        }
+        send_directive(message)
         fired{
             ent:temperatures := []
             ent:threshold_violations := []

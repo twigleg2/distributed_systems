@@ -20,13 +20,14 @@ ruleset wovyn_base {
         pre{
             eventattrs = event:attrs
             genericThing = eventattrs{"genericThing"}
-            decoded = genericThing.decode().klog("decoded:") //I might not need to decode when I use the real event
-            data = decoded{"data"}
+            data = genericThing{"data"}
             temperature = data{"temperature"}
         }
         fired{
         raise wovyn event "new_temperature_reading"
-            attributes {"temperature": temperature, "timestamp": time:now()}
+            attributes {"temperatureF": temperature[0]{"temperatureF"},
+                        "temperatureC":temperature[0]{"temperatureC"},
+                        "timestamp": time:now()}
         }
     }
 
@@ -34,8 +35,7 @@ ruleset wovyn_base {
         select when wovyn new_temperature_reading
         pre {
             eventattrs = event:attrs
-            temperature = eventattrs{"temperature"}
-            temperatureF = temperature[0]{"temperatureF"}
+            temperatureF = eventattrs{"temperatureF"}
             above_threshold = temperatureF.klog("temperatureF: ") > ent:temperature_threshold.klog("ent: ")
             message = above_threshold => "Temperature Violation!"| "No Temperature Violation."
         }
@@ -49,9 +49,8 @@ ruleset wovyn_base {
     rule threshold_notification {
         select when wovyn threshold_violation
         pre {
-            eventattrs = event:attrs.klog("eventattrs:")
-            temperature = eventattrs{"temperature"}.klog("temperature:")
-            temperatureF = temperature[0]{"temperatureF"}.klog("temperatureF:")
+            eventattrs = event:attrs
+            temperatureF = eventattrs{"temperatureF"}
             message = "Temperature sensor threshold violation!\nCurrent temperature: " + temperatureF
 
         }
