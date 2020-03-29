@@ -1,4 +1,4 @@
-ruleset sendor_profile {
+ruleset sensor_profile {
 
     meta {
         shares get_profile_data
