@@ -1,52 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './stats.css';
 
-class SPA extends React.Component {
+import Temperatures from './Temperatures.js';
+import Violations from './Violations.js';
+
+class App extends React.Component {
 
   state = {
+    format: "F",
     temperatures: [],
-  }
-
-  async componentDidMount() {
-    const response = await fetch("http://localhost:8080/sky/cloud/K5P6PzpMBd7bU7Z3ijAcao/temperature_store/temperatures");
-    const json = await response.json();
-    console.log(json);
+    violations: [],
   }
 
   render() {
-    return ( <
-      div > < /div>
+    return (
+      <div className="App">
+        <h1>Current Temperature</h1>
+        <p>current temperature goes here</p>
+        <br/>
+        <div className="stats">
+          <Temperatures></Temperatures>
+          <Violations></Violations>
+          </div>
+      </div>
     )
   }
-
 }
 
-
-
-
-
-
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-export default SPA;
+export default App;
