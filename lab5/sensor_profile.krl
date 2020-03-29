@@ -9,7 +9,7 @@ ruleset sensor_profile {
             {
                 "location": ent:location,
                 "name": ent:name,
-                "SMS_number": ent:SMS_nuber,
+                "SMS_number": ent:SMS_number,
                 "threshold": ent:threshold
             }
         }
@@ -26,7 +26,15 @@ ruleset sensor_profile {
     }
 
     rule update {
-        select when sensor:profile_updated
-
+        select when sensor profile_updated
+        pre {
+            eventattrs = event:attrs
+            SMS_number = eventattrs{"SMS_number"} => "+" + eventattrs{"SMS_number"} | ent:SMS_number
+            threshold = eventattrs{"threshold"} => eventattrs{"threshold"}.as("Number") | ent:threshold
+        }
+        fired {
+            ent:SMS_number := SMS_number
+            ent:threshold := threshold
+        }
     }
 }
