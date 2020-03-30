@@ -13,17 +13,22 @@ class App extends React.Component {
     format: "F",
     temperatures: [],
     violations: [],
+    current_temperature: 0,
+  }
+
+  getCurrentTemperature = (temperature) => {
+    this.setState({current_temperature: temperature})
   }
 
   render() {
     return (
       <div className="App">
         <h1>Current Temperature</h1>
-        <p>current temperature goes here</p>
+        <p>{this.state.current_temperature} F</p>
         <button onClick={() => history.push('/profile')}>Profile Information</button>
         <br/>
         <div className="stats">
-          <Temperatures></Temperatures>
+          <Temperatures getCurrentTemperature={this.getCurrentTemperature}></Temperatures>
           <Violations></Violations>
           </div>
       </div>

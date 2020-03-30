@@ -4,6 +4,10 @@ import './App.css';
 import axios from 'axios';
 
 class Temperatures extends React.Component{
+    constructor(props) {
+        super(props);
+    }
+
     state = {
         temperatures: []
     }
@@ -12,6 +16,7 @@ class Temperatures extends React.Component{
         const response = await axios.get("http://localhost:8080/sky/cloud/K5P6PzpMBd7bU7Z3ijAcao/temperature_store/temperatures");
         const data = await response.data;
         this.setState({temperatures: data.reverse()})
+        this.props.getCurrentTemperature(this.state.temperatures[0].temperatureF);
     }
 
     render() {
