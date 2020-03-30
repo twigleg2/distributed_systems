@@ -40,6 +40,13 @@ ruleset sensor_profile {
             ent:location := location
             ent:SMS_number := SMS_number
             ent:threshold := threshold
+            raise profile event "updated"
+                attributes {
+                    "name": name,
+                    "location": location,
+                    "SMS_number": SMS_number,
+                    "threshold": threshold
+                }
         }
     }
 }
