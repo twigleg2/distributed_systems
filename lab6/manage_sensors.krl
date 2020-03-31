@@ -1,4 +1,4 @@
-ruleset manage_sensors_practice {
+ruleset manage_sensors {
 
     global {
         nameFromID = function(sensor_number) {
