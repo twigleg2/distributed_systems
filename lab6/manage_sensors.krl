@@ -90,4 +90,19 @@ ruleset manage_sensors {
         }
         http:post(url, form = obj)
     }
+
+    rule delete_sensor {
+        select when sensor unneeded_sensor
+        pre {
+            sensor_name = event:attr("sensor_name")
+            exists = ent:sensors >< sensor_name
+        }
+        if exists then //TODO actually delete the pico.  rn I'm just removing it from the entity variable.
+            send_directive("sensor deleted", {"sensor_name": sensor_name})
+        fired {
+            raise wrangler event "child_deletion"
+                attributes {"name": sensor_name}
+            ent:sensors := ent:sensors.delete(sensor_name)
+        }
+    }
 }
