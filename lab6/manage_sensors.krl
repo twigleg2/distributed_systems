@@ -36,7 +36,8 @@ ruleset manage_sensors {
                 attributes {
                     "name": nameFromID(sensor_number),
                     "color": "#e68181",
-                    "sensor_number": sensor_number
+                    "sensor_number": sensor_number,
+                    "rids": ["temperature_store","wovyn_base","sensor_profile"]
                 }
         }
     }
@@ -50,7 +51,12 @@ ruleset manage_sensors {
         if sensor_number.klog("found sensor_number")
         then noop()
         fired {
-            ent:sensors{[sensor_number]} := the_sensor
+            ent:sensors{[nameFromID(sensor_number)]} := the_sensor
         }
+    }
+
+    rule view_sensors {
+        select when sensor view_sensors
+        send_directive("sensors", ent:sensors)
     }
 }
