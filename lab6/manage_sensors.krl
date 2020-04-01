@@ -1,8 +1,26 @@
 ruleset manage_sensors {
 
+    meta {
+        shares sensors
+    }
+
     global {
-        nameFromID = function(sensor_number) {
-            "Sensor #" + sensor_number
+        build_url = function(sensor_name) {
+            sensor_eci = sensor_name{"eci"}
+            url = <<http://localhost:8080/sky/event/#{sensor_eci}/1/sensor/profile_updated>>
+            url
+        }
+
+        build_params_obj = function(name) {
+            {
+                "name": name,
+                "SMS_number": ent:SMS_number,
+                "threshold": ent:threshold
+            }
+        }
+
+        sensors = function() {
+            ent:sensors
         }
     }
 
@@ -10,33 +28,36 @@ ruleset manage_sensors {
         select when wrangler ruleset_added where event:attr("rids") >< meta:rid
         fired{
             ent:sensors := {}
+            ent:threshold := 80
+            ent:SMS_number := "+18017934946"
         }
     }
 
     rule sensor_exists {
         select when sensor new_sensor
         pre {
-            sensor_number = event:attr("sensor_number")
-            exists = ent:sensors >< sensor_number
+            sensor_name = event:attr("sensor_name")
+            exists = ent:sensors >< sensor_name
+            url = build_url(sensor_name);
+            obj = build_params_obj(sensor_name)
         }
         if exists then
-            send_directive("sensor ready", {"sensor_number": sensor_number})
+            http:post(url, form = obj) // TODO: no idea what I'm doing here
     }
 
     rule new_sensor {
         select when sensor new_sensor
         pre {
-            sensor_number = event:attr("sensor_number")
-            exists = ent:sensors >< sensor_number
+            sensor_name = event:attr("sensor_name")
+            exists = ent:sensors >< sensor_name
         }
         if not exists then
             noop()
         fired {
             raise wrangler event "child_creation"
                 attributes {
-                    "name": nameFromID(sensor_number),
+                    "name": sensor_name,
                     "color": "#e68181",
-                    "sensor_number": sensor_number,
                     "rids": ["temperature_store","wovyn_base","sensor_profile"]
                 }
         }
@@ -46,17 +67,12 @@ ruleset manage_sensors {
         select when wrangler child_initialized
         pre {
             the_sensor = {"id": event:attr("id"), "eci": event:attr("eci")}
-            sensor_number = event:attr("sensor_number")
+            sensor_name = event:attr("sensor_name")
         }
-        if sensor_number.klog("found sensor_number")
+        if sensor_name.klog("found sensor_name")
         then noop()
         fired {
-            ent:sensors{[nameFromID(sensor_number)]} := the_sensor
+            ent:sensors{[sensor_name]} := the_sensor
         }
-    }
-
-    rule view_sensors {
-        select when sensor view_sensors
-        send_directive("sensors", ent:sensors)
     }
 }
