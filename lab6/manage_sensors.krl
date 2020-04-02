@@ -1,21 +1,18 @@
 ruleset manage_sensors {
 
     meta {
-        shares sensors
+        use module io.picolabs.wrangler alias Wrangler
+        use module temperature_store
+        shares sensors, collect_all_temps
     }
 
     global {
-        build_url = function(sensor_name) {
-            sensors = ent:sensors
-            notusedd = sensors.klog("all the sensors: ")
-            sensor = ent:sensors{[sensor_name]}.klog("the sensor: ")
-            sensor_eci = sensor{"eci"}.klog("sensor_eci: ")
-            notused = sensor_eci.klog("sensor_eci: ")
-            url = <<http://localhost:8080/sky/event/#{sensor_eci}/1/sensor/profile_updated>>
-            url
+        get_eci = function(sensor_name) {
+            sensor = ent:sensors{[sensor_name]}
+            sensor{"eci"}
         }
 
-        build_params_obj = function(name) {
+        build_attrs_obj = function(name) {
             {
                 "name": name,
                 "SMS_number": ent:SMS_number,
@@ -26,6 +23,12 @@ ruleset manage_sensors {
         sensors = function() {
             ent:sensors
         }
+
+        collect_all_temps = function() {
+            ent:sensors.map(function(k,v) {
+                Wrangler:skyQuery(get_eci(v), "temperature_store", "temperatures", {}) // {} needed? idk.
+            })
+        }
     }
 
     rule initialization {
@@ -33,7 +36,7 @@ ruleset manage_sensors {
         fired{
             ent:sensors := {}
             ent:threshold := 80
-            ent:SMS_number := "+18017934946"
+            ent:SMS_number := "18017934946"
         }
     }
 
@@ -85,10 +88,10 @@ ruleset manage_sensors {
         select when sensor update_new_sensor
         pre {
             sensor_name = event:attr("sensor_name")
-            url = build_url(sensor_name).klog("url: ")
-            obj = build_params_obj(sensor_name)
+            eci = get_eci(sensor_name)
+            obj = build_attrs_obj(sensor_name).klog("obj: ")
         }
-        http:post(url, form = obj)
+        event:send({"eci":eci, "domain":"sensor", "type":"profile_updated", "attrs":obj})
     }
 
     rule delete_sensor {
@@ -97,7 +100,7 @@ ruleset manage_sensors {
             sensor_name = event:attr("sensor_name")
             exists = ent:sensors >< sensor_name
         }
-        if exists then //TODO actually delete the pico.  rn I'm just removing it from the entity variable.
+        if exists then
             send_directive("sensor deleted", {"sensor_name": sensor_name})
         fired {
             raise wrangler event "child_deletion"
