@@ -1,9 +1,6 @@
 ruleset wovyn_base {
     meta {
-        use module twilio_keys
-        use module twilio_v2 alias twilio
-            with account_sid = keys:twilio{"account_sid"}
-                 auth_token = keys:twilio{"auth_token"}
+        use module io.picolabs.subscription alias Subscriptions
     }
 
     rule initialization {
@@ -48,16 +45,15 @@ ruleset wovyn_base {
 
     rule threshold_notification {
         select when wovyn threshold_violation
-        pre {
-            eventattrs = event:attrs
-            temperatureF = eventattrs{"temperatureF"}
-            message = "Temperature sensor threshold violation!\nCurrent temperature: " + temperatureF
-
-        }
-        twilio:send_sms (
-            ent:phone_number_to,
-            ent:phone_number_from,
-            message
+        foreach Subscriptions:established("Tx_role", "manager") setting(subscription)
+        event:send(
+            {
+                "eci": subscription{"Tx"},
+                "eid": "threshold-violation", //event id.  so far, mostly useless
+                "domain": "threshold",
+                "type": "threshold_violation",
+                "temperatureF": event:attr{"temperatureF"}
+            }
         )
     }
 

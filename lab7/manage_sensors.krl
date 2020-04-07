@@ -2,8 +2,9 @@ ruleset manage_sensors {
 
     meta {
         use module io.picolabs.wrangler alias Wrangler
+        use module io.picolabs.subscription alias Subscriptions
         use module temperature_store
-        shares sensors, collect_all_temps
+        shares sensors, collect_all_temps, show_sensor_subscriptions
     }
 
     global {
@@ -21,7 +22,7 @@ ruleset manage_sensors {
         }
 
         sensors = function() {
-            ent:sensors
+            Subscriptions:established("Tx_role","sensor")
         }
 
         collect_all_temps = function() {
@@ -113,17 +114,25 @@ ruleset manage_sensors {
         }
     }
 
-    rule sensor_subscribe {
+    rule subscribe_sensor {
         select when sensor subscribe
         fired {
             raise wrangler event "subscription" attributes
                 {
                     "name": event:attr("sensor_name"),
                     "Rx_role": "manager",
-                    "Tx_roel": "sensor",
+                    "Tx_role": "sensor",
                     "channel_type": "subscription",
                     "wellKnown_Tx": event:attr("eci")
                 }
+        }
+    }
+
+    rule subcribe_non_child {
+        select when sensor subscribe_non_child
+        fired {
+            raise sensor event "subscribe"
+                attributes{"sensor_name": event:attr("sensor_name"), "eci": event:attr("eci")} // TODO what attributes do I need? is eci the same as wellKnown_Tx?
         }
     }
 }
