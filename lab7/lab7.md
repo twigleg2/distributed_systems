@@ -1,5 +1,10 @@
 ## Gaven Finch
 
+**ruleset URLs**
+[manage_sensors](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab7/manage_sensors.krl?token=AINOKEGOQKXFAXF4CMDUVTS6SXIYQ)
+[manager_profile](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab7/manager_profile.krl?token=AINOKEDR2AYTT7OHU4FYY5S6SXI3Y)
+[wovyn_base](https://raw.githubusercontent.com/twigleg2/distributed_systems/master/lab7/wovyn_base.krl?token=AINOKEEPOGAESNXJZSC7MTC6SXJCE)
+
 
 **testing URIs**
 [create a subscription to a non-child sensor](http://localhost:8080/sky/event/LpQ2YYvo5TroeSBPtjNqQi/1/sensor/subscribe_non_child?sesor_name=old%20sensor&eci=K5P6PzpMBd7bU7Z3ijAcao). Note that the non-child sensor must still accept the subscription.

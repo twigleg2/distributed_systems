@@ -26,9 +26,7 @@ ruleset manage_sensors {
         }
 
         collect_all_temps = function() {
-            ent:sensors.map(function(k,v) {
-                Wrangler:skyQuery(get_eci(v), "temperature_store", "temperatures", {}) // {} needed? idk.
-            })
+            Wrangler:skyQuery(Subscriptions:established("Tx_role","sensor")[0]{"Tx"}, "temperature_store", "temperatures", {}) // {} needed? idk.
         }
     }
 

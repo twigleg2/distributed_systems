@@ -2,7 +2,7 @@ import requests
 import time
 import json
 
-num_picos = 5
+num_picos = 3
 create_url = "http://localhost:8080/sky/event/LpQ2YYvo5TroeSBPtjNqQi/1/sensor/new_sensor?sensor_name="
 delete_url = "http://localhost:8080/sky/event/LpQ2YYvo5TroeSBPtjNqQi/1/sensor/unneeded_sensor?sensor_name="
 view_url = "http://localhost:8080/sky/cloud/LpQ2YYvo5TroeSBPtjNqQi/manage_sensors/sensors"
