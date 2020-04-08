@@ -18,6 +18,7 @@ ruleset manager_profile {
         select when threshold violation
         pre {
             message = "Threshold violation."
+            temperature = event:attr{"temperatureF"}
         }
         twilio:send_sms (
             ent:phone_number_to,

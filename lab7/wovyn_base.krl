@@ -51,7 +51,7 @@ ruleset wovyn_base {
                 "eci": subscription{"Tx"},
                 "eid": "threshold-violation", //event id.  so far, mostly useless
                 "domain": "threshold",
-                "type": "threshold_violation",
+                "type": "violation",
                 "temperatureF": event:attr{"temperatureF"}
             }
         )
