@@ -1,0 +1,7 @@
+Hello!
+Since I was late to join a group, I'm going to explain here in my own words what my group is going to do, as well as clarify some points and right some inconsistencies I found in the original.
+My group members are Xander Hooper and Austen Arts.  We're building the fast flower delivery system without too many extra bells and whistles.  I won't rehash the common points, but here are the pieces that are unique to us:
+1. When a driver has been assigned to a delivery, a text message will be sent to the customer with details like estimated delivery time, driver info, and a QR code.
+2. When a driver makes a delivery, the customer presents the QR code they received to the driver, who scans it with his phone.  This will send an event back to the flower shop to confirm delivery.
+Things to note:
+The original project proposal says that the customer will scan a QR code printed on the package to confirm delivery.  This has been changed in favor of the driver scanning the code sent to the customer.  If you have any other questions, they can probably be answered by looking at the original proposal.  If that isn't enough, don't hesitate to ask!
