@@ -1,17 +1,16 @@
 ruleset gossip {
     meta {
         use module temperature_store
-        shares test
+        shares view_seen, view_temperatures
     }
 
     global {
-        generate_rumor_message = function(origin_id, sequence_number, temperature, timestamp) {
-            {
-                "OriginID": origin_id,
-                "SequenceNumber": sequence_number,
-                "Temperature": temperature,
-                "Timestamp": timestamp
-            } //TODO: outdated.
+        view_seen = function() {
+            ent:seen
+        }
+
+        view_temperatures = function() {
+            ent:temperatures
         }
 
         get_random_peer = function() {
@@ -21,11 +20,17 @@ ruleset gossip {
             peers[random_index]
         }
 
-        calculate_send_temps = function(seen_peer) {
+        calculate_rumor = function(seen_peer) {
             ent:temperatures.filter(function(v1, k1) {
                 v1.filter(function(v2, k2) {
                     k2 > seen_peer{k1}
                 }) //keep all inner entries who's sequence number is greater than the peers corresponding sequence number
+            })
+        }
+
+        calculate_seen_updates = function(obj) {
+            obj.filter(function(v,k) {
+                v.keys().sort().tail()
             })
         }
     }
@@ -40,10 +45,13 @@ ruleset gossip {
             ent:temperatures := {}
             // {
             //     origin_id: {
-            //         sequence_number: temperature_object
+            //         sequence_number: temperature_object,
+            //         sequence_number: temperature_object,
+            //         ...
             //     },
             //     origin_id: {
             //         sequence_number: temperature_object
+            //         ...
             //     },
             //     ...
             // }
@@ -77,7 +85,7 @@ ruleset gossip {
     rule seen_received {
         select when gossip seen
         pre {
-            temps_to_send = calculate_send_temps(event:attr("seen"))
+            temps_to_send = calculate_rumor(event:attr("seen"))
         }
         if ent:active then event:send(
             {
@@ -86,18 +94,23 @@ ruleset gossip {
                 "domain": "gossip",
                 "type": "rumor",
                 "attrs": {
-                    //temperatures that need to be sent back
+                    "updates": temps_to_send
                 }
             }
         )
-        fired {
-
-        }
     }
 
     rule rumor_received {
         select when gossip rumor
+        pre {
+            seen_updates = calculate_seen_updates(event:attr("updates"))
+            temperature_updates = calculate_temperature_updates(event:attr("updates"))
+        }
         if ent:active then noop()
+        fired {
+            ent:seen := ent:seen.put(seen_updates)
+            ent:temperatures := ent:temperatures.put(temperature_updates)
+        }
     }
 
     rule new_temperature_reading {

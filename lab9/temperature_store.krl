@@ -61,30 +61,4 @@ ruleset temperature_store {
             ent:threshold_violations := []
         }
     }
-
-
-
-    // TODO: remove..................................................................
-    rule report_wanted {
-        select when sensor report
-        foreach Subscriptions:established("Tx_role", "manager") setting(subscription)
-        pre {
-            temperatures = temperatures()
-            eventattrs = event:attrs.klog("eventattrs: ")
-            cid = eventattrs{"cid"}.klog("cid: ")
-        }
-        event:send(
-            {
-                "eci": subscription{"Tx"},
-                "eid": "report", //event id.  so far, mostly useless
-                "domain": "manager",
-                "type": "receive_report",
-                "attrs": {
-                    "cid": cid,
-                    "temperatures": temperatures,
-                    "Rx": subscription{"Rx"}
-                }
-            }
-        )
-    }
 }
